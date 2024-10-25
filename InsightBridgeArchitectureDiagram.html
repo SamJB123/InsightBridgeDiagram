@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Azure Architecture Diagram</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
+    <style>
+        .mermaid {
+            background: white;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="mermaid">
+        %%{init: {
+            'theme': 'base',
+            'themeVariables': {
+                'fontSize': '16px',
+                'fontFamily': 'arial',
+                'lineColor': '#34495E',
+                'clusterBkg': 'white',
+                'clusterBorder': '#34495E'
+            }
+        }}%%
+        
+        flowchart TB
+            %% Core Services
+            ACR["Azure Container Registry\n(click for docs)"]
+            click ACR "https://azure.microsoft.com/en-us/products/container-registry/" _blank
+            
+            SWA["Static Web App\n(click for docs)"]
+            click SWA "https://azure.microsoft.com/en-us/products/app-service/static" _blank
+            
+            EntraID["Entra ID\nMicrosoft Authentication Library\n(click for docs)"]
+            click EntraID "https://learn.microsoft.com/en-us/entra/msal/python/" _blank
+            
+            %% Container App Components
+            subgraph ContainerApp["Container App (click for docs)"]
+                FE["Frontend\nJavaScript/Next.js"]
+                BE["Backend\nPython FastAPI"]
+            end
+            click ContainerApp "https://azure.microsoft.com/en-us/products/container-apps/" _blank
+            click FE "https://azure.microsoft.com/en-us/products/container-apps/" _blank
+            click BE "https://azure.microsoft.com/en-us/products/container-apps/" _blank
+            
+            %% Azure Services
+            AOAI["Azure OpenAI Service\n(click for docs)"]
+            click AOAI "https://azure.microsoft.com/en-au/products/ai-services/openai-service" _blank
+            
+            AIS["Azure AI Studio\n(click for docs)"]
+            click AIS "https://azure.microsoft.com/en-us/products/ai-studio" _blank
+            
+            ADF["Azure Data Factory\n(click for docs)"]
+            click ADF "https://azure.microsoft.com/en-us/products/data-factory" _blank
+            
+            %% Blob Storage Components
+            subgraph BlobMain["Azure Blob Storage (click for docs)"]
+                VBStore["Vector DB\nBlob Storage"]
+                StaticStore["Static Content\nBlob Storage"]
+            end
+            click BlobMain "https://azure.microsoft.com/en-us/products/storage/blobs" _blank
+            click VBStore "https://azure.microsoft.com/en-us/products/storage/blobs" _blank
+            click StaticStore "https://azure.microsoft.com/en-us/products/storage/blobs" _blank
+            
+            %% Cosmos DB Components
+            subgraph CosmosMain["Azure Cosmos NoSQL (click for docs)"]
+                CD["Chat Data\n- Users\n- Threads\n- Runs\n- Assistant"]
+                VDB["Vector Database\nContainers per topic"]
+            end
+            click CosmosMain "https://azure.microsoft.com/en-us/products/cosmos-db" _blank
+            click CD "https://azure.microsoft.com/en-us/products/cosmos-db" _blank
+            click VDB "https://azure.microsoft.com/en-us/products/cosmos-db" _blank
+            
+            %% Define relationships
+            ACR --> ContainerApp
+            ContainerApp --> SWA
+            StaticStore --> SWA
+            FE <--> BE
+            BE <--> EntraID
+            BE --> AOAI
+            BE --> CosmosMain
+            CD --> VDB
+            VBStore --> ADF
+            ADF --> VDB
+            AOAI <--> AIS
+            
+            %% Styling with new colors and black text for container
+            classDef azure fill:#5DADE2,color:white,stroke:#34495E
+            classDef container fill:#F39C12,color:black,stroke:#34495E
+            classDef service fill:#ffffff,color:#34495E,stroke:#34495E
+            
+            class ACR,EntraID,AOAI,AIS,ADF,BlobMain azure
+            class ContainerApp,FE,BE container
+            class SWA,CD,VDB,VBStore,StaticStore service
+    </div>
+
+    <script>
+        mermaid.initialize({ 
+            startOnLoad: true,
+            securityLevel: 'loose',
+            flowchart: {
+                curve: 'basis',
+                padding: 20,
+                nodeSpacing: 50,
+                rankSpacing: 50,
+                htmlLabels: true
+            }
+        });
+    </script>
+</body>
+</html>
